@@ -1,0 +1,658 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Espacios Libres — Oftalmología · Hospital Alemán</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet" />
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --bg: #f4f3ef;
+    --surface: #ffffff;
+    --surface2: #f0efe9;
+    --border: #e0ddd4;
+    --text: #1a1916;
+    --text2: #6b6860;
+    --text3: #a8a59e;
+    --blue: #1a56e8;
+    --blue-bg: #eef2fd;
+    --blue-border: #c0cffa;
+    --green: #1a7a4a;
+    --green-bg: #eaf5ee;
+    --green-border: #b3dfc4;
+    --amber: #92600a;
+    --amber-bg: #fdf4e3;
+    --amber-border: #f0d49a;
+    --red: #c0392b;
+    --radius: 10px;
+    --radius-lg: 16px;
+    --shadow: 0 1px 3px rgba(0,0,0,0.06), 0 1px 2px rgba(0,0,0,0.04);
+  }
+
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+    line-height: 1.5;
+  }
+
+  header {
+    background: var(--surface);
+    border-bottom: 1px solid var(--border);
+    padding: 0 24px;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+  }
+
+  .header-inner {
+    max-width: 860px;
+    margin: 0 auto;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    height: 60px;
+    gap: 16px;
+  }
+
+  .logo {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .logo-dot {
+    width: 28px;
+    height: 28px;
+    border-radius: 8px;
+    background: var(--blue);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .logo-dot svg { width: 14px; height: 14px; fill: white; }
+
+  .logo-text { font-size: 14px; font-weight: 600; color: var(--text); }
+  .logo-sub { font-size: 12px; color: var(--text2); font-weight: 400; }
+
+  .nav-tabs { display: flex; gap: 4px; }
+  .nav-tab {
+    padding: 6px 14px;
+    border-radius: 8px;
+    border: 1px solid transparent;
+    font-size: 13px;
+    font-weight: 500;
+    cursor: pointer;
+    background: transparent;
+    color: var(--text2);
+    transition: all 0.15s;
+    font-family: 'DM Sans', sans-serif;
+  }
+  .nav-tab:hover { background: var(--surface2); color: var(--text); }
+  .nav-tab.active {
+    background: var(--blue-bg);
+    color: var(--blue);
+    border-color: var(--blue-border);
+  }
+
+  main { max-width: 860px; margin: 0 auto; padding: 28px 24px; }
+
+  /* ── TABLERO ── */
+  .tablero-header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    margin-bottom: 20px;
+    flex-wrap: wrap;
+    gap: 12px;
+  }
+
+  .tablero-title { font-size: 22px; font-weight: 600; color: var(--text); }
+  .tablero-sub { font-size: 13px; color: var(--text2); margin-top: 2px; }
+
+  .stats-row { display: flex; gap: 10px; flex-wrap: wrap; }
+  .stat-pill {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 5px 12px;
+    border-radius: 99px;
+    font-size: 12px;
+    font-weight: 500;
+    border: 1px solid;
+  }
+  .stat-pill.blue { background: var(--blue-bg); color: var(--blue); border-color: var(--blue-border); }
+  .stat-pill.green { background: var(--green-bg); color: var(--green); border-color: var(--green-border); }
+  .stat-pill.amber { background: var(--amber-bg); color: var(--amber); border-color: var(--amber-border); }
+
+  .filter-bar { display: flex; gap: 6px; margin-bottom: 20px; flex-wrap: wrap; }
+  .filter-btn {
+    padding: 5px 14px;
+    border-radius: 99px;
+    border: 1px solid var(--border);
+    font-size: 12px;
+    font-weight: 500;
+    cursor: pointer;
+    background: var(--surface);
+    color: var(--text2);
+    font-family: 'DM Sans', sans-serif;
+    transition: all 0.15s;
+  }
+  .filter-btn:hover { border-color: var(--text3); color: var(--text); }
+  .filter-btn.active { background: var(--text); color: white; border-color: var(--text); }
+
+  .card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    padding: 16px 20px;
+    margin-bottom: 10px;
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 16px;
+    box-shadow: var(--shadow);
+    transition: border-color 0.15s;
+    animation: fadeUp 0.2s ease both;
+  }
+  .card:hover { border-color: var(--text3); }
+  .card.taken { opacity: 0.5; }
+
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(6px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .card-left { flex: 1; min-width: 0; }
+
+  .tipo-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    font-size: 11px;
+    font-weight: 600;
+    padding: 3px 10px;
+    border-radius: 99px;
+    margin-bottom: 10px;
+    letter-spacing: 0.03em;
+    text-transform: uppercase;
+  }
+  .tipo-badge.consultorio { background: var(--blue-bg); color: var(--blue); border: 1px solid var(--blue-border); }
+  .tipo-badge.quirofano { background: var(--amber-bg); color: var(--amber); border: 1px solid var(--amber-border); }
+
+  .card-medico { font-size: 15px; font-weight: 600; color: var(--text); }
+  .card-fecha { font-size: 13px; color: var(--text2); margin-top: 3px; }
+  .card-horario {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    font-family: 'DM Mono', monospace;
+    font-size: 12px;
+    color: var(--text2);
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 2px 8px;
+    margin-top: 8px;
+  }
+  .card-obs { font-size: 12px; color: var(--text3); margin-top: 6px; font-style: italic; }
+
+  .btn-tomar {
+    flex-shrink: 0;
+    padding: 8px 16px;
+    border-radius: var(--radius);
+    border: 1px solid var(--green-border);
+    background: var(--green-bg);
+    color: var(--green);
+    font-size: 12px;
+    font-weight: 600;
+    cursor: pointer;
+    font-family: 'DM Sans', sans-serif;
+    transition: all 0.15s;
+    white-space: nowrap;
+  }
+  .btn-tomar:hover { background: var(--green); color: white; border-color: var(--green); }
+
+  .taken-tag {
+    flex-shrink: 0;
+    font-size: 12px;
+    color: var(--text3);
+    padding: 8px 14px;
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    white-space: nowrap;
+    font-weight: 500;
+  }
+
+  .empty-state {
+    text-align: center;
+    padding: 60px 20px;
+    color: var(--text3);
+  }
+  .empty-state p { font-size: 15px; margin-top: 8px; }
+
+  /* ── FORM ── */
+  .form-wrap {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    padding: 28px;
+    box-shadow: var(--shadow);
+  }
+
+  .form-title { font-size: 18px; font-weight: 600; margin-bottom: 4px; }
+  .form-sub { font-size: 13px; color: var(--text2); margin-bottom: 24px; }
+
+  .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+  .form-group { display: flex; flex-direction: column; gap: 5px; }
+  .form-group.full { grid-column: 1 / -1; }
+
+  .form-group label { font-size: 12px; font-weight: 600; color: var(--text2); text-transform: uppercase; letter-spacing: 0.05em; }
+
+  .form-group input,
+  .form-group select,
+  .form-group textarea {
+    width: 100%;
+    padding: 9px 12px;
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    font-size: 14px;
+    font-family: 'DM Sans', sans-serif;
+    color: var(--text);
+    background: var(--surface);
+    outline: none;
+    transition: border-color 0.15s;
+  }
+  .form-group input:focus,
+  .form-group select:focus,
+  .form-group textarea:focus { border-color: var(--blue); box-shadow: 0 0 0 3px rgba(26,86,232,0.1); }
+  .form-group textarea { resize: none; height: 70px; }
+
+  .horario-section { display: flex; flex-direction: column; gap: 10px; }
+  .horario-sliders { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+  .slider-group { display: flex; flex-direction: column; gap: 6px; }
+  .slider-group label { font-size: 12px; color: var(--text2); font-weight: 500; }
+  .slider-row { display: flex; align-items: center; gap: 8px; }
+  .slider-row input[type=range] { flex: 1; accent-color: var(--blue); }
+  .slider-val {
+    font-family: 'DM Mono', monospace;
+    font-size: 12px;
+    font-weight: 500;
+    color: var(--blue);
+    background: var(--blue-bg);
+    border: 1px solid var(--blue-border);
+    border-radius: 6px;
+    padding: 2px 8px;
+    min-width: 50px;
+    text-align: center;
+  }
+  .horario-preview {
+    text-align: center;
+    font-family: 'DM Mono', monospace;
+    font-size: 15px;
+    font-weight: 500;
+    color: var(--text);
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 10px;
+  }
+
+  .btn-submit {
+    margin-top: 20px;
+    width: 100%;
+    padding: 12px;
+    border-radius: var(--radius);
+    border: none;
+    background: var(--blue);
+    color: white;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    font-family: 'DM Sans', sans-serif;
+    transition: all 0.15s;
+    letter-spacing: 0.01em;
+  }
+  .btn-submit:hover { background: #1244c4; }
+  .btn-submit:disabled { opacity: 0.6; cursor: not-allowed; }
+
+  /* ── LOADING ── */
+  .loading-overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(244,243,239,0.8);
+    z-index: 200;
+    align-items: center;
+    justify-content: center;
+    font-size: 14px;
+    color: var(--text2);
+    gap: 10px;
+    flex-direction: column;
+  }
+  .loading-overlay.show { display: flex; }
+  .spinner {
+    width: 24px; height: 24px;
+    border: 2px solid var(--border);
+    border-top-color: var(--blue);
+    border-radius: 50%;
+    animation: spin 0.7s linear infinite;
+  }
+  @keyframes spin { to { transform: rotate(360deg); } }
+
+  /* ── TOAST ── */
+  .toast {
+    position: fixed;
+    bottom: 24px;
+    left: 50%;
+    transform: translateX(-50%) translateY(10px);
+    background: var(--text);
+    color: white;
+    padding: 10px 20px;
+    border-radius: var(--radius);
+    font-size: 13px;
+    font-weight: 500;
+    opacity: 0;
+    transition: all 0.25s;
+    pointer-events: none;
+    z-index: 300;
+    white-space: nowrap;
+  }
+  .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+  .toast.error { background: var(--red); }
+
+  @media (max-width: 600px) {
+    .form-grid { grid-template-columns: 1fr; }
+    .form-group.full { grid-column: 1; }
+    .horario-sliders { grid-template-columns: 1fr; }
+    .header-inner { flex-wrap: wrap; height: auto; padding: 12px 0; }
+    .tablero-header { flex-direction: column; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="header-inner">
+    <div class="logo">
+      <div class="logo-dot">
+        <svg viewBox="0 0 16 16"><circle cx="8" cy="8" r="5"/></svg>
+      </div>
+      <div>
+        <div class="logo-text">Espacios Libres</div>
+        <div class="logo-sub">Oftalmología · Hospital Alemán</div>
+      </div>
+    </div>
+    <div class="nav-tabs">
+      <button class="nav-tab active" onclick="showView('tablero', this)">Tablero</button>
+      <button class="nav-tab" onclick="showView('publicar', this)">Publicar espacio</button>
+    </div>
+  </div>
+</header>
+
+<main>
+
+  <!-- TABLERO -->
+  <div id="view-tablero">
+    <div class="tablero-header">
+      <div>
+        <div class="tablero-title">Espacios disponibles</div>
+        <div class="tablero-sub">Actualizá la página para ver los últimos cambios</div>
+      </div>
+      <div class="stats-row">
+        <div class="stat-pill blue" id="stat-total">— total</div>
+        <div class="stat-pill green" id="stat-libre">— libres</div>
+        <div class="stat-pill amber" id="stat-tomado">— tomados</div>
+      </div>
+    </div>
+
+    <div class="filter-bar">
+      <button class="filter-btn active" onclick="setFiltro('todos', this)">Todos</button>
+      <button class="filter-btn" onclick="setFiltro('Consultorio', this)">Consultorios</button>
+      <button class="filter-btn" onclick="setFiltro('Quirófano', this)">Quirófanos</button>
+    </div>
+
+    <div id="lista"></div>
+  </div>
+
+  <!-- PUBLICAR -->
+  <div id="view-publicar" style="display:none;">
+    <div class="form-wrap">
+      <div class="form-title">Publicar un espacio libre</div>
+      <div class="form-sub">Completá los datos y el espacio queda visible para todo el servicio al instante.</div>
+
+      <div class="form-grid">
+        <div class="form-group">
+          <label>Tu nombre</label>
+          <input type="text" id="f-nombre" placeholder="Ej: Dra. García" />
+        </div>
+        <div class="form-group">
+          <label>Tipo de espacio</label>
+          <select id="f-tipo">
+            <option value="">Seleccionar...</option>
+            <option value="Consultorio">Consultorio</option>
+            <option value="Quirófano">Quirófano</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>Número de módulo</label>
+          <input type="text" id="f-modulo" placeholder="Ej: 19, 34, Q1..." />
+        </div>
+        <div class="form-group">
+          <label>Fecha</label>
+          <input type="date" id="f-fecha" />
+        </div>
+
+        <div class="form-group full">
+          <label>Horario disponible</label>
+          <div class="horario-section" style="margin-top:6px;">
+            <div class="horario-sliders">
+              <div class="slider-group">
+                <label>Desde</label>
+                <div class="slider-row">
+                  <input type="range" id="s-desde" min="8" max="20" step="1" value="8" oninput="updateHorario()" />
+                  <span class="slider-val" id="v-desde">8:00</span>
+                </div>
+              </div>
+              <div class="slider-group">
+                <label>Hasta</label>
+                <div class="slider-row">
+                  <input type="range" id="s-hasta" min="8" max="20" step="1" value="20" oninput="updateHorario()" />
+                  <span class="slider-val" id="v-hasta">20:00</span>
+                </div>
+              </div>
+            </div>
+            <div class="horario-preview" id="horario-preview">8:00 — 20:00</div>
+          </div>
+        </div>
+
+        <div class="form-group full">
+          <label>Observaciones (opcional)</label>
+          <textarea id="f-obs" placeholder="Ej: disponible para reprogramar pacientes, cirugía de catarata..."></textarea>
+        </div>
+      </div>
+
+      <button class="btn-submit" id="btn-publicar" onclick="publicar()">Publicar espacio libre</button>
+    </div>
+  </div>
+
+</main>
+
+<div class="loading-overlay" id="loading">
+  <div class="spinner"></div>
+  <span id="loading-msg">Cargando...</span>
+</div>
+<div class="toast" id="toast"></div>
+
+<script>
+const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbx3KRLYxPLevIrJeh-HxLolUmRkVj4_DJfR87CU7NnGcZCzDO7WDI9EdTJhon2gz4qi/exec";
+
+let espacios = [];
+let filtro = 'todos';
+
+async function cargar() {
+  showLoading('Cargando espacios...');
+  try {
+    const res = await fetch(SCRIPT_URL + '?action=getEspacios');
+    const data = await res.json();
+    espacios = data.reverse();
+    renderLista();
+  } catch(e) {
+    toast('Error al cargar. Revisá tu conexión.', true);
+  } finally {
+    hideLoading();
+  }
+}
+
+function renderLista() {
+  const lista = document.getElementById('lista');
+  let filtrados = espacios.filter(e => filtro === 'todos' || e.tipo === filtro);
+  filtrados.sort((a, b) => a.fecha.localeCompare(b.fecha));
+
+  const total = filtrados.length;
+  const libres = filtrados.filter(e => !e.reclamadoPor).length;
+  const tomados = total - libres;
+
+  document.getElementById('stat-total').textContent = `${total} total`;
+  document.getElementById('stat-libre').textContent = `${libres} libre${libres !== 1 ? 's' : ''}`;
+  document.getElementById('stat-tomado').textContent = `${tomados} tomado${tomados !== 1 ? 's' : ''}`;
+
+  if (filtrados.length === 0) {
+    lista.innerHTML = `<div class="empty-state">
+      <p>No hay espacios publicados aún.</p>
+      <p style="margin-top:6px; font-size:13px;">¡Sé la primera en publicar uno!</p>
+    </div>`;
+    return;
+  }
+
+  lista.innerHTML = filtrados.map((e, i) => {
+    const tomado = e.reclamadoPor && e.reclamadoPor.toString().trim() !== '';
+    const fechaFmt = formatFecha(e.fecha);
+    const tipoClass = e.tipo === 'Consultorio' ? 'consultorio' : 'quirofano';
+    return `
+    <div class="card ${tomado ? 'taken' : ''}" style="animation-delay:${i * 0.04}s">
+      <div class="card-left">
+        <div class="tipo-badge ${tipoClass}">${e.tipo} · Módulo ${e.modulo}</div>
+        <div class="card-medico">${e.nombre}</div>
+        <div class="card-fecha">${fechaFmt}</div>
+        <div class="card-horario">${e.horario}</div>
+        ${e.obs ? `<div class="card-obs">${e.obs}</div>` : ''}
+      </div>
+      <div style="flex-shrink:0;">
+        ${tomado
+          ? `<div class="taken-tag">Tomado por ${e.reclamadoPor}</div>`
+          : `<button class="btn-tomar" onclick="tomar(${e.id})">Tomar espacio</button>`}
+      </div>
+    </div>`;
+  }).join('');
+}
+
+async function tomar(id) {
+  const nombre = prompt('Tu nombre para registrar que tomás este espacio:');
+  if (!nombre || !nombre.trim()) return;
+  showLoading('Registrando...');
+  try {
+    await fetch(`${SCRIPT_URL}?action=tomar&id=${id}&reclamadoPor=${encodeURIComponent(nombre.trim())}`);
+    await cargar();
+    toast('Espacio reservado correctamente.');
+  } catch(e) {
+    toast('Error al registrar. Intentá de nuevo.', true);
+    hideLoading();
+  }
+}
+
+async function publicar() {
+  const nombre = document.getElementById('f-nombre').value.trim();
+  const tipo = document.getElementById('f-tipo').value;
+  const modulo = document.getElementById('f-modulo').value.trim();
+  const fecha = document.getElementById('f-fecha').value;
+  const obs = document.getElementById('f-obs').value.trim();
+  const horario = document.getElementById('horario-preview').textContent;
+
+  if (!nombre || !tipo || !modulo || !fecha) {
+    toast('Completá todos los campos obligatorios.', true);
+    return;
+  }
+
+  const btn = document.getElementById('btn-publicar');
+  btn.disabled = true;
+  showLoading('Publicando espacio...');
+
+  try {
+    const url = `${SCRIPT_URL}?action=publicar&nombre=${encodeURIComponent(nombre)}&tipo=${encodeURIComponent(tipo)}&modulo=${encodeURIComponent(modulo)}&fecha=${encodeURIComponent(fecha)}&horario=${encodeURIComponent(horario)}&obs=${encodeURIComponent(obs)}`;
+    await fetch(url);
+
+    document.getElementById('f-nombre').value = '';
+    document.getElementById('f-tipo').value = '';
+    document.getElementById('f-modulo').value = '';
+    document.getElementById('f-fecha').value = '';
+    document.getElementById('f-obs').value = '';
+    document.getElementById('s-desde').value = 8;
+    document.getElementById('s-hasta').value = 20;
+    updateHorario();
+
+    showView('tablero', document.querySelector('.nav-tab'));
+    await cargar();
+    toast('Espacio publicado y visible para todos.');
+  } catch(e) {
+    toast('Error al publicar. Intentá de nuevo.', true);
+  } finally {
+    btn.disabled = false;
+    hideLoading();
+  }
+}
+
+function updateHorario() {
+  let desde = parseInt(document.getElementById('s-desde').value);
+  let hasta = parseInt(document.getElementById('s-hasta').value);
+  if (hasta <= desde) { hasta = Math.min(desde + 1, 20); document.getElementById('s-hasta').value = hasta; }
+  document.getElementById('v-desde').textContent = `${desde}:00`;
+  document.getElementById('v-hasta').textContent = `${hasta}:00`;
+  document.getElementById('horario-preview').textContent = `${desde}:00 — ${hasta}:00`;
+}
+
+function setFiltro(val, el) {
+  filtro = val;
+  document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+  el.classList.add('active');
+  renderLista();
+}
+
+function showView(v, el) {
+  document.getElementById('view-tablero').style.display = v === 'tablero' ? 'block' : 'none';
+  document.getElementById('view-publicar').style.display = v === 'publicar' ? 'block' : 'none';
+  document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
+  el.classList.add('active');
+}
+
+function formatFecha(f) {
+  if (!f) return '';
+  const [y, m, d] = f.toString().split('-');
+  const dias = ['domingo','lunes','martes','miércoles','jueves','viernes','sábado'];
+  const meses = ['enero','febrero','marzo','abril','mayo','junio','julio','agosto','septiembre','octubre','noviembre','diciembre'];
+  const fecha = new Date(parseInt(y), parseInt(m) - 1, parseInt(d));
+  return `${dias[fecha.getDay()]} ${parseInt(d)} de ${meses[parseInt(m)-1]} de ${y}`;
+}
+
+function showLoading(msg) {
+  document.getElementById('loading-msg').textContent = msg;
+  document.getElementById('loading').classList.add('show');
+}
+function hideLoading() { document.getElementById('loading').classList.remove('show'); }
+
+function toast(msg, err = false) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.className = 'toast show' + (err ? ' error' : '');
+  setTimeout(() => t.className = 'toast', 3500);
+}
+
+cargar();
+</script>
+</body>
+</html>
