@@ -511,7 +511,11 @@ async function cargar() {
 
 function renderLista() {
   const lista = document.getElementById('lista');
-  let filtrados = espacios.filter(e => filtro === 'todos' || e.tipo === filtro);
+  const hoy = new Date().toISOString().split('T')[0]; // "YYYY-MM-DD"
+  let filtrados = espacios.filter(e => {
+    const fecha = e.fecha ? e.fecha.toString().slice(0, 10) : '';
+    return fecha >= hoy && (filtro === 'todos' || e.tipo === filtro);
+  });
   filtrados.sort((a, b) => a.fecha.localeCompare(b.fecha));
 
   const total = filtrados.length;
@@ -651,6 +655,9 @@ function toast(msg, err = false) {
   t.className = 'toast show' + (err ? ' error' : '');
   setTimeout(() => t.className = 'toast', 3500);
 }
+
+// Bloquear fechas pasadas en el formulario
+document.getElementById('f-fecha').min = new Date().toISOString().split('T')[0];
 
 cargar();
 </script>
